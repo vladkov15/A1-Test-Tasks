@@ -10,7 +10,7 @@ import java.util.List;
 public class FileEditor {
 
 
-    public List<Logins> ReadLogin(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
+    public List<Logins> readLogin(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
         BufferedReader br = null;
         String line = "";
         List<Logins> listOfLogins = new ArrayList<>();
@@ -22,11 +22,11 @@ public class FileEditor {
             br = new BufferedReader(new FileReader(csvFile));
             int index = 0;
             while ((line = br.readLine()) != null) {
-                index += 1;
                 if(!line.isEmpty() && index > 0){
                     String[] logins = line.split(cvsSplitBy);
                         listOfLogins.add(new Logins(logins[0],logins[1],Boolean.parseBoolean(logins[2]),logins[3],logins[4]));
                 }
+                index += 1;
             }
 
         } catch (FileNotFoundException e) {
@@ -46,10 +46,10 @@ public class FileEditor {
         return listOfLogins;
     }
 
-    public void Start() throws IOException {
+    public void start() throws IOException {
         FileWriter file_writer = null;
-        List<Logins> listOfLogins = new ArrayList<>(ReadLogin("data/logins.csv", ","));
-        List<Postings> listOfPostings = new ArrayList<>(ReadPostings("data/postings.csv",";"));
+        List<Logins> listOfLogins = new ArrayList<>(readLogin("data/logins.csv", ","));
+        List<Postings> listOfPostings = new ArrayList<>(readPostings("data/postings.csv",";"));
 
         for (int i = 0; i < listOfPostings.size(); i++) {
             for (int j = 0; j <listOfLogins.size() ; j++) {
@@ -78,7 +78,7 @@ public class FileEditor {
 
     }
 
-    public List<Postings> ReadPostings(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
+    public List<Postings> readPostings(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
         BufferedReader br = null;
         String line = "";
         List<Postings> listOfPostings = new ArrayList<>();

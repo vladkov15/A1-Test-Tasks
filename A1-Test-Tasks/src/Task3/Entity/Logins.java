@@ -57,6 +57,6 @@ public class Logins {
     }
 
     public String ToString(){
-        return getApplication() + getAppAccountName() + isActive() + getJobTitle() + getDepartment();
+        return getApplication()+ ";" + getAppAccountName()+ ";" + isActive()+ ";" + getJobTitle()+ ";" + getDepartment();
     }
 }

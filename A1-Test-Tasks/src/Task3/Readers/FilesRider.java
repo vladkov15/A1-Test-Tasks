@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class FilesRider {
 
 
-    public void Start(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
+    public void start(String csvFile, String cvsSplitBy ) throws FileNotFoundException {
         BufferedReader br = null;
         String line = "";
 

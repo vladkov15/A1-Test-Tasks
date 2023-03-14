@@ -118,7 +118,7 @@ public class Postings {
 
     @Override
     public String toString() {
-        return Mat_Doc + ";\t" + Item + ";\t" + Doc_Date + ";\t" + Mat_Doc + ";\t" + Pstng_Date + ";\t"
+        return Mat_Doc + ";\t" + Item + ";\t" + Doc_Date + ";\t"  + Pstng_Date + ";\t"
                 + Material_Description + ";\t" + Quantity + ";\t" + BUn + ";\t" + Amount_LC + ";\t" + Crcy + ";\t"
                 + User_Name + ";\t" + Authorized_Delivery + ";\t\n";
 
