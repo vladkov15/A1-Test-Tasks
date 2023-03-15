@@ -1,11 +1,15 @@
 package Task3.Entity;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Postings {
 
     private String Mat_Doc;
     private String Item;
-    private String Doc_Date;
-    private String Pstng_Date;
+    private Date Doc_Date;
+    private  Date Pstng_Date;
     private String Material_Description;
     private String Quantity;
     private String BUn;
@@ -14,18 +18,21 @@ public class Postings {
     private String User_Name;
     private String Authorized_Delivery;
 
-    public Postings(String mat_Doc, String item, String doc_Date, String pstng_Date, String material_Description, String quantity, String BUn, String amount_LC, String crcy, String user_Name) {
+    public Postings(String mat_Doc, String item, String doc_Date, String pstng_Date, String material_Description, String quantity, String BUn, String amount_LC, String crcy, String user_Name, String authorized_delivery) {
         Mat_Doc = mat_Doc;
         Item = item;
-        Doc_Date = doc_Date;
-        Pstng_Date = pstng_Date;
+        DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd.MM.uuuu" ) ;
+        LocalDate localDate = LocalDate.parse( doc_Date , f ) ;
+        Doc_Date = Date.valueOf(localDate);
+        localDate = LocalDate.parse(pstng_Date , f);
+        Pstng_Date = Date.valueOf(localDate);
         Material_Description = material_Description;
         Quantity = quantity;
         this.BUn = BUn;
         Amount_LC = amount_LC;
         Crcy = crcy;
         User_Name = user_Name;
-        Authorized_Delivery = "false";
+        Authorized_Delivery = authorized_delivery;
     }
 
     public String getMat_Doc() {
@@ -44,19 +51,19 @@ public class Postings {
         Item = item;
     }
 
-    public String getDoc_Date() {
+    public Date getDoc_Date() {
         return Doc_Date;
     }
 
-    public void setDoc_Date(String doc_Date) {
+    public void setDoc_Date(Date doc_Date) {
         Doc_Date = doc_Date;
     }
 
-    public String getPstng_Date() {
+    public Date getPstng_Date() {
         return Pstng_Date;
     }
 
-    public void setPstng_Date(String pstng_Date) {
+    public void setPstng_Date(Date pstng_Date) {
         Pstng_Date = pstng_Date;
     }
 
@@ -118,10 +125,12 @@ public class Postings {
 
     @Override
     public String toString() {
-        return Mat_Doc + ";\t" + Item + ";\t" + Doc_Date + ";\t"  + Pstng_Date + ";\t"
-                + Material_Description + ";\t" + Quantity + ";\t" + BUn + ";\t" + Amount_LC + ";\t" + Crcy + ";\t"
-                + User_Name + ";\t" + Authorized_Delivery + ";\t\n";
+        return Mat_Doc + ";" + Item + ";" + Doc_Date + ";"  + Pstng_Date + ";"
+                + Material_Description + ";" + Quantity + ";" + BUn + ";" + Amount_LC + ";" + Crcy + ";"
+                + User_Name + ";" + Authorized_Delivery+"\n";
 
     }
+
+
 }
 
