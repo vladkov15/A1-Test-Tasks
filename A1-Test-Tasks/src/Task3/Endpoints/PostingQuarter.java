@@ -23,11 +23,9 @@ public class PostingQuarter  extends BaseEndpoint implements HttpHandler {
 
             ConnectionToMySQL db = new ConnectionToMySQL();
             try {
-//                System.out.println(requestURI.split("/")[3]);
-//                String Response = gson.toJson(db.quarterSelect(requestURI.split("/")[3]));
-//                System.out.println(Response);//тут можно убрать ограничение в кол-во записей
-//                //добавил лишь только потому что при проверке в postman, когда отправляешь больше 4 элементов, выдает ошибку в postman.
-//                handleResponse(httpExchange, Response);
+                String Response = gson.toJson(db.quarterSelect(db.connectDataBase(),requestURI.split("/")[4]));
+                System.out.println(Response);
+                handleResponse(httpExchange, Response);
 
             } catch (Exception e) {
                 throw new RuntimeException(e);

@@ -1,12 +1,10 @@
 package Task3;
 
 
-import Task3.DB.ConnectionToMySQL;
+import Task3.Endpoints.PostingMonth;
 import Task3.Endpoints.PostingQuarter;
 import Task3.Endpoints.PostingYear;
-import Task3.Endpoints.PostingsAll;
-import Task3.Readers.FileEditor;
-import Task3.Readers.FilesRider;
+import Task3.Endpoints.PostingDay;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
@@ -20,12 +18,12 @@ public class Task3 {
     public static void main(String[] args) throws Exception {
         //1. Прочитать файл logins.csv с локальной файловой системы
 //        FilesRider fr = new FilesRider();
-//        fr.start("data/logins.csv", ",");
+//        fr.start("data/logins.csv", ",", -1);
 
         System.out.println("-------------------------------------------------------------------------------");
 
         //2. Прочитать файл postings.csv с локальной файловой системы (строки со значениями в поле Mat. Doc.)
-//        fr.start("data/postings.csv",";");
+//        fr.start("data/postings.csv",";",0);
 
 
         //3. Добавить булевое поле "авторизованная поставка" в данные из postings.csv, которое будет указывать, что
@@ -46,12 +44,13 @@ public class Task3 {
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(38889), 0);
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-        HttpContext context = server.createContext("/task3-6", new PostingsAll());
-        context = server.createContext("/task3-6/year/", new PostingYear());
-        context = server.createContext("/task3-6/quarter/", new PostingQuarter());
+        HttpContext context = server.createContext("/api/task3-6/year/", new PostingYear());
+        context = server.createContext("/api/task3-6/quarter/", new PostingQuarter());
+        context = server.createContext("/api/task3-6/month/", new PostingMonth());
+        context = server.createContext("/api/task3-6/day/", new PostingDay());
         server.setExecutor(threadPoolExecutor);
         server.start();
         System.out.println("Server started");
-//    }
+
     }
 }

@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class PostingsDay extends BaseEndpoint implements HttpHandler {
+public class PostingDay extends BaseEndpoint implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -18,14 +18,13 @@ public class PostingsDay extends BaseEndpoint implements HttpHandler {
         System.out.println(requestURI);
         System.out.println(httpExchange.getRequestMethod());
         if ("GET".equals(httpExchange.getRequestMethod())) {
-            System.out.println("task3-6: GET handled");
+            System.out.println("task3-6/day: GET handled");
 
 
             ConnectionToMySQL db = new ConnectionToMySQL();
             try {
-//                String Response = gson.toJson(db.writePostings(db.connectDataBase()));//тут можно убрать ограничение в кол-во записей
-//                //добавил лишь только потому что при проверке в postman, когда отправляешь больше 4 элементов.
-//                handleResponse(httpExchange, Response);
+                String Response = gson.toJson(db.daySelect(db.connectDataBase(),requestURI.split("/")[4]));
+                handleResponse(httpExchange, Response);
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
