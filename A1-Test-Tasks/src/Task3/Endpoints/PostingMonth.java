@@ -24,7 +24,7 @@ public class PostingMonth extends BaseEndpoint implements HttpHandler {
 
             ConnectionToMySQL db = new ConnectionToMySQL();
             try {
-                String Response = gson.toJson(db.monthSelect(db.connectDataBase(),requestURI.split("/")[4]));
+                String Response = gson.toJson(db.monthSelect(db.connectDataBase(),requestURI));
                 System.out.println(Response);
                 handleResponse(httpExchange, Response);
 

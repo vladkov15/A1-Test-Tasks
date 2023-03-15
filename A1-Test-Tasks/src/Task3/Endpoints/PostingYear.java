@@ -22,7 +22,7 @@ public class PostingYear  extends BaseEndpoint implements HttpHandler {
             ConnectionToMySQL db = new ConnectionToMySQL();
             try {
 
-                String Response = gson.toJson(db.yearSelect(db.connectDataBase(),requestURI.split("/")[4]));
+                String Response = gson.toJson(db.yearSelect(db.connectDataBase(),requestURI));
                 handleResponse(httpExchange, Response);
 
             } catch (Exception e) {

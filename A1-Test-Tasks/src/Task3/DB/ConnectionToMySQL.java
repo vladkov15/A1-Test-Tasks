@@ -133,124 +133,147 @@ public class ConnectionToMySQL {
     }
 
 
-    public List<Postings> yearSelect(Connection connect, String year) throws Exception {
+    public List<Postings> yearSelect(Connection connect, String url ) throws Exception {
+        String mass[] = url.split("/");
         List<Postings> resultList = new ArrayList<>();
+        String sqlFilter = "";
+        if(mass.length == 5){
+            statement = connect.createStatement();
 
-        statement = connect.createStatement();
+            resultSet = statement
+                    .executeQuery("select * from a1.postings where year(DocDate) in ('"+mass[4]+"')");
 
-        resultSet = statement
-                .executeQuery("select * from a1.postings where year(DocDate) in ('"+year+"')");
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;
+        }else{
+            if (mass[6].equals("true")){
+                sqlFilter = "and AuthorizedDelivery = true";
+            }
+            statement = connect.createStatement();
+
+            resultSet = statement
+                    .executeQuery("select * from a1.postings where year(DocDate) in ('"+mass[4]+"') " +sqlFilter);
 
 
-        while (resultSet.next()) {
-
-            String mat_doc = resultSet.getString("MatDoc");
-            String item = resultSet.getString("Item");
-            String doc_date = resultSet.getString("DocDate");
-            String pstng_date = resultSet.getString("PstngDate");
-            String material_description = resultSet.getString("MaterialDescription");
-            String quantity = resultSet.getString("Quantity");
-            String BUn = resultSet.getString("BUn");
-            String amount_lc = resultSet.getString("AmountLC");
-            String crcy = resultSet.getString("Crcy");
-            String user_name = resultSet.getString("UserName");
-            String authorized_delivery = String.valueOf(resultSet.getBoolean("AuthorizedDelivery"));
-            System.out.println(mat_doc+item+doc_date+pstng_date+material_description+quantity+BUn+amount_lc+crcy+user_name+authorized_delivery);
-            resultList.add(new Postings(mat_doc,item,doc_date,pstng_date,material_description,quantity,BUn,amount_lc,crcy,user_name,authorized_delivery));
-
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;
         }
 
-        close();
-
-        return resultList;
     }
 
-    public List<Postings> quarterSelect(Connection connect, String quarter) throws Exception {
-        String monthEnd = String.valueOf(Integer.parseInt(quarter)*3);
-        String monthStart = String.valueOf(Integer.parseInt(quarter)*3-2);
-
-        System.out.println("select * from a1.postings where DocDate between '2020-0"+monthStart+"-01' and '2020-0"+monthEnd+"-30' ");
+    public List<Postings> quarterSelect(Connection connect, String url) throws Exception {
+        String mass[] = url.split("/");
+        String[] month = new String[3];
+        month[0] = String.valueOf(Integer.parseInt(mass[4])*3-2);
+        month[1] = String.valueOf(Integer.parseInt(mass[4])*3-1);
+        month[2] = String.valueOf(Integer.parseInt(mass[4])*3);
 
         List<Postings> resultList = new ArrayList<>();
-
         statement = connect.createStatement();
+        if(mass.length == 5)
+        {
+            resultSet = statement
+                .executeQuery("select * from a1.postings where month(DocDate) in ('0"+month[0]+"','0"+month[1]+"','0"+month[2]+"')");
 
-        resultSet = statement
-                .executeQuery("select * from a1.postings where DocDate between '2020-0"+monthStart+"-01' and '2020-0"+monthEnd+"-30' ");
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;
+        }else
+        {
+            String sqlFilter = "";
+            if (mass[6].equals("true")){
+                sqlFilter = "and AuthorizedDelivery = true";
+            }
+            resultSet = statement
+                .executeQuery("select * from a1.postings where month(DocDate) in ('0"+month[0]+"','0"+month[1]+"','0"+month[2]+"') "+ sqlFilter);
 
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;}
 
-        while (resultSet.next()) {
-
-            String mat_doc = resultSet.getString("MatDoc");
-            String item = resultSet.getString("Item");
-            String doc_date = resultSet.getString("DocDate");
-            String pstng_date = resultSet.getString("PstngDate");
-            String material_description = resultSet.getString("MaterialDescription");
-            String quantity = resultSet.getString("Quantity");
-            String BUn = resultSet.getString("BUn");
-            String amount_lc = resultSet.getString("AmountLC");
-            String crcy = resultSet.getString("Crcy");
-            String user_name = resultSet.getString("UserName");
-            String authorized_delivery = String.valueOf(resultSet.getBoolean("AuthorizedDelivery"));
-            System.out.println(mat_doc+item+doc_date+pstng_date+material_description+quantity+BUn+amount_lc+crcy+user_name+authorized_delivery);
-            resultList.add(new Postings(mat_doc,item,doc_date,pstng_date,material_description,quantity,BUn,amount_lc,crcy,user_name,authorized_delivery));
-
-        }
-        close();
-
-        return resultList;
     }
 
-    public List<Postings> monthSelect(Connection connect, String month) throws Exception {
-
+    public List<Postings> monthSelect(Connection connect, String url) throws Exception {
+        String mass[] = url.split("/");
         List<Postings> resultList = new ArrayList<>();
         statement = connect.createStatement();
         String sql = null;
-        if (Integer.parseInt(month) <= 9){
-            sql = "select * from a1.postings where month(DocDate) in ('0"+month+"')";
-        }else {
-            sql = "select * from a1.postings where month(DocDate) in ('"+month+"')";
+        if(mass.length == 5){
+            if (Integer.parseInt(mass[4]) <= 9){
+                sql = "select * from a1.postings where month(DocDate) in ('0"+mass[4]+"')";
+            }else {
+                sql = "select * from a1.postings where month(DocDate) in ('"+mass[4]+"')";
+            }
+            resultSet = statement
+                    .executeQuery(sql);
+
+            resultList = getResultSetPostings(resultSet);
+            close();
+
+            return resultList;
+        }else{
+            String sqlFilter = "";
+            if (mass[6].equals("true")){
+                sqlFilter = "and AuthorizedDelivery = true";
+            }
+            if (Integer.parseInt(mass[4]) <= 9){
+                sql = "select * from a1.postings where month(DocDate) in ('0"+mass[4]+"') " + sqlFilter;
+            }else {
+                sql = "select * from a1.postings where month(DocDate) in ('"+mass[4]+"') " + sqlFilter;
+            }
+            resultSet = statement
+                    .executeQuery(sql);
+
+            resultList = getResultSetPostings(resultSet);
+            close();
+
+            return resultList;
         }
-        resultSet = statement
-                .executeQuery(sql);
 
-
-        while (resultSet.next()) {
-
-            String mat_doc = resultSet.getString("MatDoc");
-            String item = resultSet.getString("Item");
-            String doc_date = resultSet.getString("DocDate");
-            String pstng_date = resultSet.getString("PstngDate");
-            String material_description = resultSet.getString("MaterialDescription");
-            String quantity = resultSet.getString("Quantity");
-            String BUn = resultSet.getString("BUn");
-            String amount_lc = resultSet.getString("AmountLC");
-            String crcy = resultSet.getString("Crcy");
-            String user_name = resultSet.getString("UserName");
-            String authorized_delivery = String.valueOf(resultSet.getBoolean("AuthorizedDelivery"));
-            System.out.println(mat_doc+item+doc_date+pstng_date+material_description+quantity+BUn+amount_lc+crcy+user_name+authorized_delivery);
-            resultList.add(new Postings(mat_doc,item,doc_date,pstng_date,material_description,quantity,BUn,amount_lc,crcy,user_name,authorized_delivery));
-
-        }
-        close();
-
-        return resultList;
     }
 
-    public List<Postings> daySelect(Connection connect, String day) throws Exception {
-
+    public List<Postings> daySelect(Connection connect,String url) throws Exception {
+        String mass[] = url.split("/");
         List<Postings> resultList = new ArrayList<>();
         statement = connect.createStatement();
         String sql = null;
-        if (Integer.parseInt(day) <= 9){
-            sql = "select * from a1.postings where day(DocDate) in ('0"+day+"')";
-        }else {
-            sql = "select * from a1.postings where day(DocDate) in ('"+day+"')";
+        if(mass.length == 5){
+            if (Integer.parseInt(mass[4]) <= 9){
+                sql = "select * from a1.postings where day(DocDate) in ('0"+mass[4]+"')";
+            }else {
+                sql = "select * from a1.postings where day(DocDate) in ('"+mass[4]+"')";
+            }
+            resultSet = statement
+                    .executeQuery(sql);
+
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;
+        }else
+        {
+            String sqlFilter = "";
+        if (mass[6].equals("true")){
+            sqlFilter = "and AuthorizedDelivery = true";
         }
-        resultSet = statement
-                .executeQuery(sql);
+            if (Integer.parseInt(mass[4]) <= 9){
+                sql = "select * from a1.postings where day(DocDate) in ('0"+mass[4]+"') "+ sqlFilter;
+            }else {
+                sql = "select * from a1.postings where day(DocDate) in ('"+mass[4]+"') " + sqlFilter;
+            }
+            resultSet = statement
+                    .executeQuery(sql);
 
+            resultList = getResultSetPostings(resultSet);
+            close();
+            return resultList;
+        }
 
+    }
+
+    public List<Postings> getResultSetPostings(ResultSet resultSet) throws SQLException {
+        List<Postings> resultList = new ArrayList<>();
         while (resultSet.next()) {
 
             String mat_doc = resultSet.getString("MatDoc");
@@ -268,8 +291,6 @@ public class ConnectionToMySQL {
             resultList.add(new Postings(mat_doc,item,doc_date,pstng_date,material_description,quantity,BUn,amount_lc,crcy,user_name,authorized_delivery));
 
         }
-        close();
-
         return resultList;
     }
 
@@ -290,7 +311,12 @@ public class ConnectionToMySQL {
                 connect.close();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
+
+
+
+
+
 }

@@ -23,7 +23,7 @@ public class PostingDay extends BaseEndpoint implements HttpHandler {
 
             ConnectionToMySQL db = new ConnectionToMySQL();
             try {
-                String Response = gson.toJson(db.daySelect(db.connectDataBase(),requestURI.split("/")[4]));
+                String Response = gson.toJson(db.daySelect(db.connectDataBase(),requestURI));
                 handleResponse(httpExchange, Response);
 
             } catch (Exception e) {
